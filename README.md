@@ -2,9 +2,29 @@
 
 A game about a cat family for ADA4003
 
+## TODO !!!
+
+tutorial level:
+[] tileset and map
+[] cat player sprites
+[] dialogue boxes
+[] talking to npcs
+[] main cat player 9 lives
+[] npc enemies
+[] npc enemy projectiles
+[] item slots
+[] acquiring cat powers
+[] using cat power projectiles
+
+loading screens & lore:
+TBD
+
+level 1:
+TBD
+
 ## Usage
 
-Ensure you have [Node.js](https://nodejs.org) installed.
+Make sure you have [Node.js](https://nodejs.org) installed.
 
 Clone this repo and `cd` to the project directory.
 
