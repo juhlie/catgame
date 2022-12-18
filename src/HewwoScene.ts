@@ -1,13 +1,4 @@
-import Player from "./Player";
-import GridControls from "./GridControls";
-import GridPhysics from "./GridPhysics";
-import { Direction } from "./Direction";
-
 export default class Hewwo extends Phaser.Scene {
-  static readonly TILE_SIZE = 48;
-  private gridControls: GridControls;
-  private gridPhysics: GridPhysics;
-
   public preload() {
     this.load.image("tiles", "assets/cloud_tileset.png");
     this.load.tilemapTiledJSON("cloud-city-map", "assets/cloud-city.json.tmj");
@@ -31,41 +22,37 @@ export default class Hewwo extends Phaser.Scene {
     const playerSprite = this.add.sprite(0, 0, "player");
     playerSprite.setDepth(2);
     playerSprite.scale = 3;
-    this.cameras.main.startFollow(playerSprite);
-    const player = new Player(playerSprite, new Phaser.Math.Vector2(6, 6));
+    this.cameras.main.startFollow(playerSprite, true);
+    this.cameras.main.setFollowOffset(
+      -playerSprite.width,
+      -playerSprite.height
+    );
 
-    // controls
-    this.gridPhysics = new GridPhysics(player, cloudCityTilemap);
-    this.gridControls = new GridControls(this.input, this.gridPhysics);
+    // grid movment
+    const gridEngineConfig = {
+      characters: [
+        {
+          id: "player",
+          sprite: playerSprite,
+          walkingAnimationMapping: 6,
+          startPosition: { x: 8, y: 8 },
+        },
+      ],
+    };
 
-    // animations
-    this.createPlayerAnimation(Direction.UP, 90, 92);
-    this.createPlayerAnimation(Direction.RIGHT, 78, 80);
-    this.createPlayerAnimation(Direction.DOWN, 54, 56);
-    this.createPlayerAnimation(Direction.LEFT, 66, 68);
-
-    // collisions
+    this.gridEngine.create(cloudCityTilemap, gridEngineConfig);
   }
 
   public update(_time: number, delta: number) {
-    this.gridControls.update();
-    this.gridPhysics.update(delta);
-  }
-
-  private createPlayerAnimation(
-    name: string,
-    startFrame: number,
-    endFrame: number
-  ) {
-    this.anims.create({
-      key: name,
-      frames: this.anims.generateFrameNumbers("player", {
-        start: startFrame,
-        end: endFrame,
-      }),
-      frameRate: 10,
-      repeat: -1,
-      yoyo: true,
-    });
+    const cursors = this.input.keyboard.createCursorKeys();
+    if (cursors.left.isDown) {
+      this.gridEngine.move("player", "left");
+    } else if (cursors.right.isDown) {
+      this.gridEngine.move("player", "right");
+    } else if (cursors.up.isDown) {
+      this.gridEngine.move("player", "up");
+    } else if (cursors.down.isDown) {
+      this.gridEngine.move("player", "down");
+    }
   }
 }

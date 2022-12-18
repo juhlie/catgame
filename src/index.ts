@@ -1,3 +1,4 @@
+import { GridEngine } from "grid-engine";
 import "phaser";
 import Hewwo from "./HewwoScene";
 
@@ -6,7 +7,7 @@ enum Canvas {
   Height = 528,
 }
 
-const config: Phaser.Types.Core.GameConfig = {
+const gameConfig: Phaser.Types.Core.GameConfig = {
   render: {
     antialias: false,
   },
@@ -16,7 +17,16 @@ const config: Phaser.Types.Core.GameConfig = {
     height: Canvas.Height,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
+  plugins: {
+    scene: [
+      {
+        key: "gridEngine",
+        plugin: GridEngine,
+        mapping: "gridEngine",
+      },
+    ],
+  },
   scene: [Hewwo],
 };
 
-export default new Phaser.Game(config);
+export default new Phaser.Game(gameConfig);

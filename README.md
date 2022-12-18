@@ -6,7 +6,7 @@ A game about a cat family for ADA4003
 
 tutorial level:
 
-- [] test grid physics plugin (vs manually adding it)
+- [x] test grid physics plugin (vs manually adding it)
 - [] tileset and map
 - [] cat player sprites
 - [] dialogue boxes
