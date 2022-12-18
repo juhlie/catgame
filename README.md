@@ -7,24 +7,24 @@ A game about a cat family for ADA4003
 tutorial level:
 
 - [x] test grid physics plugin (vs manually adding it)
-- [] tileset and map
-- [] cat player sprites
-- [] dialogue boxes
-- [] talking to npcs
-- [] main cat player 9 lives
-- [] npc enemies
-- [] npc enemy projectiles
-- [] item slots
-- [] acquiring cat powers
-- [] using cat power projectiles
+- [ ] tileset and map
+- [ ] cat player sprites
+- [ ] dialogue boxes
+- [ ] talking to npcs
+- [ ] main cat player 9 lives
+- [ ] npc enemies
+- [ ] npc enemy projectiles
+- [ ] item slots
+- [ ] acquiring cat powers
+- [ ] using cat power projectiles
 
 loading screens & lore:
 
-- TBD
+TBD
 
 level 1:
 
-- TBD
+TBD
 
 ## Usage
 

@@ -1,6 +1,6 @@
-import { GridEngine } from "grid-engine";
 import "phaser";
-import Hewwo from "./HewwoScene";
+import { GridEngine } from "grid-engine";
+import TutorialScene from "./TutorialScene";
 
 enum Canvas {
   Width = 720,
@@ -26,7 +26,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
       },
     ],
   },
-  scene: [Hewwo],
+  scene: [TutorialScene],
 };
 
 export default new Phaser.Game(gameConfig);
