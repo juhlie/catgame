@@ -4,9 +4,9 @@ export default class TutorialScene extends Phaser.Scene {
   gridEngine: GridEngine; // doesn't do anything, but gets rid of error message
 
   public preload() {
-    this.load.image("tiles", "assets/cloud_tileset.png");
-    this.load.tilemapTiledJSON("cloud-city-map", "assets/cloud-city.json.tmj");
-    this.load.spritesheet("player", "assets/characters.png", {
+    this.load.image("tiles", "assets/img/lofi_pastels.png");
+    this.load.tilemapTiledJSON("tutorial_map", "assets/tiledata/tutorial.tmj");
+    this.load.spritesheet("player", "assets/img/characters.png", {
       frameWidth: 26,
       frameHeight: 36,
     });
@@ -14,10 +14,14 @@ export default class TutorialScene extends Phaser.Scene {
 
   public create() {
     // map
-    const cloudCityTilemap = this.make.tilemap({ key: "cloud-city-map" });
-    cloudCityTilemap.addTilesetImage("Cloud City", "tiles");
-    for (let i = 0; i < cloudCityTilemap.layers.length; i++) {
-      const layer = cloudCityTilemap.createLayer(i, "Cloud City", 0, 0);
+    /**
+		 note - arguments are weird:
+		 tilemap.addTilesetImage('tilesetNameInTiled', 'tilesetNameInPhaser');
+		 */
+    const tutorialTilemap = this.make.tilemap({ key: "tutorial_map" });
+    tutorialTilemap.addTilesetImage("Lofi Pastels", "tiles");
+    for (let i = 0; i < tutorialTilemap.layers.length; i++) {
+      const layer = tutorialTilemap.createLayer(i, "Lofi Pastels", 0, 0);
       layer.setDepth(i);
       layer.scale = 3;
     }
@@ -44,7 +48,7 @@ export default class TutorialScene extends Phaser.Scene {
       ],
     };
 
-    this.gridEngine.create(cloudCityTilemap, gridEngineConfig);
+    this.gridEngine.create(tutorialTilemap, gridEngineConfig);
   }
 
   public update() {
