@@ -1,21 +1,21 @@
 import { GridEngine } from "grid-engine";
 
 export default class TutorialScene extends Phaser.Scene {
-  gridEngine: GridEngine; // doesn't do anything, but gets rid of error message
+  gridEngine: GridEngine; // does nothing, but gets rid of error message (?)
 
   public preload() {
     this.load.image("tiles", "assets/img/lofi_pastels.png");
     this.load.tilemapTiledJSON("tutorial_map", "assets/tiledata/tutorial.tmj");
-    this.load.spritesheet("player", "assets/img/characters.png", {
-      frameWidth: 26,
-      frameHeight: 36,
+    this.load.spritesheet("player", "assets/img/pipo-nekonin005.png", {
+      frameWidth: 32,
+      frameHeight: 32,
     });
   }
 
   public create() {
     // map
     /**
-		 note - arguments are weird:
+		 note - parameters are weird:
 		 tilemap.addTilesetImage('tilesetNameInTiled', 'tilesetNameInPhaser');
 		 */
     const tutorialTilemap = this.make.tilemap({ key: "tutorial_map" });
@@ -26,29 +26,74 @@ export default class TutorialScene extends Phaser.Scene {
       layer.scale = 3;
     }
 
-    // player
+    // player setup
     const playerSprite = this.add.sprite(0, 0, "player");
-    playerSprite.setDepth(2);
-    playerSprite.scale = 3;
+    playerSprite.scale = 2.5;
+    playerSprite.setFrame(this.getStopFrame("right"));
     this.cameras.main.startFollow(playerSprite, true);
     this.cameras.main.setFollowOffset(
       -playerSprite.width,
       -playerSprite.height
     );
 
-    // grid movment
+    // player walking animations
+    this.createPlayerAnimation.call(this, "up", 9, 11);
+    this.createPlayerAnimation.call(this, "right", 6, 8);
+    this.createPlayerAnimation.call(this, "down", 0, 2);
+    this.createPlayerAnimation.call(this, "left", 3, 5);
+
+    // grid movement
     const gridEngineConfig = {
       characters: [
         {
           id: "player",
           sprite: playerSprite,
-          walkingAnimationMapping: 6,
-          startPosition: { x: 8, y: 8 },
+          startPosition: { x: 3, y: 7 },
         },
       ],
     };
-
     this.gridEngine.create(tutorialTilemap, gridEngineConfig);
+
+    this.gridEngine.movementStarted().subscribe(({ direction }) => {
+      playerSprite.anims.play(direction);
+    });
+    this.gridEngine.movementStopped().subscribe(({ direction }) => {
+      playerSprite.anims.stop();
+      playerSprite.setFrame(this.getStopFrame(direction));
+    });
+    this.gridEngine.directionChanged().subscribe(({ direction }) => {
+      playerSprite.setFrame(this.getStopFrame(direction));
+    });
+  }
+
+  private createPlayerAnimation(
+    name: string,
+    startFrame: number,
+    endFrame: number
+  ) {
+    this.anims.create({
+      key: name,
+      frames: this.anims.generateFrameNumbers("player", {
+        start: startFrame,
+        end: endFrame,
+      }),
+      frameRate: 10,
+      repeat: -1,
+      yoyo: true,
+    });
+  }
+
+  private getStopFrame(direction: string) {
+    switch (direction) {
+      case "up":
+        return 10;
+      case "right":
+        return 7;
+      case "down":
+        return 1;
+      case "left":
+        return 4;
+    }
   }
 
   public update() {
