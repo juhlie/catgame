@@ -21,6 +21,8 @@ export default class TutorialScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+
+    this.load.plugin("DialogModalPlugin", "./DialogPlugin.ts");
   }
 
   public create() {
@@ -36,6 +38,9 @@ export default class TutorialScene extends Phaser.Scene {
       layer.setDepth(i);
       layer.scale = 3;
     }
+
+    // load dialog plugin - THIS IS WHERE IT BROKE.
+    // this.sys.install("DialogModalPlugin")
 
     // player setup
     const [playerSprite, container] = this.createSpriteWithContainer.call(

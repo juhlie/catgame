@@ -57,3 +57,5 @@ npm run build
 [Phaser 3 Webpack 5 boilerplate](https://github.com/sebsowter/phaser-webpack) for JavaScript ES6
 
 [Grid based movement tutorial](https://medium.com/swlh/grid-based-movement-in-a-top-down-2d-rpg-with-phaser-3-e3a3486eb2fd) for Phaser 3
+
+[Dialog plugin tutorial](https://gamedevacademy.org/create-a-dialog-modal-plugin-in-phaser-3-part-1/)
