@@ -6,14 +6,25 @@ export default class TutorialScene extends Phaser.Scene {
   public preload() {
     this.load.image("tiles", "assets/img/lofi_pastels.png");
     this.load.tilemapTiledJSON("tutorial_map", "assets/tiledata/tutorial.tmj");
+    /*
+		tutorial map: tiles 16x16, 18 tiles high, 32 tiles wide
+		map height = 864 px = 16 px * 18 tiles * 3 for scale
+		map width = 1536 px = 16 px * 32 tiles * 3 for scale
+		*/
+
     this.load.spritesheet("player", "assets/img/pipo-nekonin005.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+
+    this.load.spritesheet("agent", "assets/img/pipo-nekonin010.png", {
       frameWidth: 32,
       frameHeight: 32,
     });
   }
 
   public create() {
-    // map
+    // create map
     /**
 		 note - parameters are weird:
 		 tilemap.addTilesetImage('tilesetNameInTiled', 'tilesetNameInPhaser');
@@ -27,10 +38,13 @@ export default class TutorialScene extends Phaser.Scene {
     }
 
     // player setup
-    const playerSprite = this.add.sprite(0, 0, "player");
+    const [playerSprite, container] = this.createSpriteWithContainer.call(
+      this,
+      "player"
+    );
     playerSprite.scale = 2.5;
     playerSprite.setFrame(this.getStopFrame("right"));
-    this.cameras.main.startFollow(playerSprite, true);
+    this.cameras.main.startFollow(container, true);
     this.cameras.main.setFollowOffset(
       -playerSprite.width,
       -playerSprite.height
@@ -42,6 +56,15 @@ export default class TutorialScene extends Phaser.Scene {
     this.createPlayerAnimation.call(this, "down", 0, 2);
     this.createPlayerAnimation.call(this, "left", 3, 5);
 
+    // npc agent setup
+    const [agentSprite, agentContainer] = this.createSpriteWithContainer.call(
+      this,
+      "agent"
+    );
+    agentSprite.setDepth(playerSprite.depth);
+    agentSprite.scale = 2.5;
+    agentSprite.setFrame(this.getStopFrame("up"));
+
     // grid movement
     const gridEngineConfig = {
       characters: [
@@ -49,6 +72,19 @@ export default class TutorialScene extends Phaser.Scene {
           id: "player",
           sprite: playerSprite,
           startPosition: { x: 3, y: 7 },
+          container: container,
+          collides: {
+            collisionGroups: ["npc"],
+          },
+        },
+        {
+          id: "agent",
+          sprite: agentSprite,
+          startPosition: { x: 7, y: 12 },
+          container: agentContainer,
+          collides: {
+            collisionGroups: ["npc"],
+          },
         },
       ],
     };
@@ -94,6 +130,12 @@ export default class TutorialScene extends Phaser.Scene {
       case "left":
         return 4;
     }
+  }
+
+  private createSpriteWithContainer(spriteID: string) {
+    const sprite = this.add.sprite(0, 0, spriteID).setScale(2.5);
+    const container = this.add.container(0, 0, [sprite]);
+    return [sprite, container];
   }
 
   public update() {

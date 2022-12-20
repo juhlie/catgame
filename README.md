@@ -8,9 +8,9 @@ tutorial level:
 
 - [x] test grid physics plugin (vs manually adding it)
 - [x] tileset and map
-- [ ] cat player sprites
-- [ ] dialogue boxes
-- [ ] talking to npcs
+- [x] cat player sprites
+- [x] npc sprites w/ collisions
+- [ ] dialogue boxes / talking to npcs
 - [ ] main cat player 9 lives
 - [ ] npc enemies
 - [ ] npc enemy projectiles
@@ -25,6 +25,10 @@ TBD
 level 1:
 
 TBD
+
+extras/nits (stop wasting your time on these...):
+
+- [ ] set camera to only follow player's x axis (center canvas vertically)
 
 ## Usage
 

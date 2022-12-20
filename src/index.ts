@@ -2,9 +2,9 @@ import "phaser";
 import { GridEngine } from "grid-engine";
 import TutorialScene from "./TutorialScene";
 
-enum Canvas {
-  Width = 720,
-  Height = 528,
+export enum Canvas {
+  Width = 1000,
+  Height = 864,
 }
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
