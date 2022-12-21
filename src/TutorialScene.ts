@@ -75,6 +75,7 @@ export default class TutorialScene extends Phaser.Scene {
           sprite: playerSprite,
           startPosition: { x: 3, y: 7 },
           container: container,
+          speed: 4,
           collides: {
             collisionGroups: ["npc"],
           },
@@ -105,9 +106,23 @@ export default class TutorialScene extends Phaser.Scene {
 
     // testing dialog plugin
     this.dialogPlugin.init();
-    this.dialogPlugin.setText(
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    );
+
+    // testing sprite collisions
+    const playerMovements = this.gridEngine.positionChangeFinished();
+    playerMovements.subscribe((data) => {
+      if (data.charId == "player") {
+        if (this.isFacing("player", "agent")) {
+          console.log("facing");
+        }
+      }
+    });
+
+    const playerBlockedMovements = this.gridEngine.directionChanged();
+    playerBlockedMovements.subscribe(() => {
+      if (this.isFacing("player", "agent")) {
+        console.log("facing");
+      }
+    });
   }
 
   private createPlayerAnimation(
@@ -144,6 +159,35 @@ export default class TutorialScene extends Phaser.Scene {
     const sprite = this.add.sprite(0, 0, spriteID).setScale(2.5);
     const container = this.add.container(0, 0, [sprite]);
     return [sprite, container];
+  }
+
+  private isFacing(playerSprite: string, otherSprite: string): boolean {
+    return (
+      JSON.stringify(this.gridEngine.getFacingPosition(playerSprite)) ==
+      JSON.stringify(this.gridEngine.getPosition(otherSprite))
+    );
+  }
+
+  private areAdjacent(playerSprite: string, otherSprite: string): boolean {
+    const pos = JSON.stringify(this.gridEngine.getPosition(playerSprite));
+    const tilesToCheck = this.getAdjacentTiles(otherSprite);
+    let touching = false;
+    tilesToCheck.forEach((tile) => {
+      if (pos == JSON.stringify(tile)) {
+        touching = true;
+      }
+    });
+    return touching;
+  }
+
+  private getAdjacentTiles(spriteId: string): {}[] {
+    const pos = this.gridEngine.getPosition(spriteId);
+    return [
+      { x: pos.x - 1, y: pos.y },
+      { x: pos.x + 1, y: pos.y },
+      { x: pos.x, y: pos.y - 1 },
+      { x: pos.x, y: pos.y + 1 },
+    ];
   }
 
   public update() {

@@ -30,7 +30,8 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
     eventEmitter.on("destroy", this.destroy, this); */
   }
 
-  /*   //  Called when a Scene shuts down, it may then come back again later
+  /* 
+  //  Called when a Scene shuts down, it may then come back again later
   // (which will invoke the 'start' event) but should be considered dormant.
   private shutdown() {
     if (this.text) this.text.destroy();
@@ -135,7 +136,7 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
   private _setText(text) {
     console.log("THIS IS WHAT YOU SAID!!!\n", text);
     // Reset the dialog
-    if (this.text) this.text.destroy();
+    // if (this.text) this.text.destroy();
     var x = this.padding + 24;
     var y = this._getGameHeight() - this.windowHeight - this.padding + 20;
     this.text = this.scene.make.text({
@@ -172,8 +173,10 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
     });
     this.closeBtn.on("pointerdown", function () {
       self.toggleWindow();
-      if (self.text) self.text.destroy();
-      console.log("destroyed?", self.text);
+      // if (self.text) {
+      //   self.text.destroy();
+      //   console.log("destroyed?", self.text);
+      // }
     });
   }
 

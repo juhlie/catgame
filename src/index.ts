@@ -18,13 +18,12 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     height: Canvas.Height,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  // physics: {
-  //   default: "arcade",
-  //   arcade: {
-  //     debug: false,
-  //     debugShowBody: false,
-  //   },
-  // },
+  physics: {
+    default: "arcade",
+    arcade: {
+      debug: true,
+    },
+  },
   plugins: {
     scene: [
       {
