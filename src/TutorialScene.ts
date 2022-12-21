@@ -8,11 +8,6 @@ export default class TutorialScene extends Phaser.Scene {
   public preload() {
     this.load.image("tiles", "assets/img/lofi_pastels.png");
     this.load.tilemapTiledJSON("tutorial_map", "assets/tiledata/tutorial.tmj");
-    /*
-		tutorial map: tiles 16x16, 18 tiles high, 32 tiles wide
-		map height = 864 px = 16 px * 18 tiles * 3 for scale
-		map width = 1536 px = 16 px * 32 tiles * 3 for scale
-		*/
 
     this.load.spritesheet("player", "assets/img/pipo-nekonin005.png", {
       frameWidth: 32,
@@ -33,10 +28,11 @@ export default class TutorialScene extends Phaser.Scene {
 		 */
     const tutorialTilemap = this.make.tilemap({ key: "tutorial_map" });
     tutorialTilemap.addTilesetImage("Lofi Pastels", "tiles");
+    const mapScale = 3;
     for (let i = 0; i < tutorialTilemap.layers.length; i++) {
       const layer = tutorialTilemap.createLayer(i, "Lofi Pastels", 0, 0);
       layer.setDepth(i);
-      layer.scale = 3;
+      layer.scale = mapScale;
     }
 
     // player setup
@@ -44,19 +40,24 @@ export default class TutorialScene extends Phaser.Scene {
       this,
       "player"
     );
-    playerSprite.scale = 2.5;
     playerSprite.setFrame(this.getStopFrame("right"));
-    this.cameras.main.startFollow(container, true);
-    this.cameras.main.setFollowOffset(
-      -playerSprite.width,
-      -playerSprite.height
-    );
-
-    // player walking animations
     this.createPlayerAnimation.call(this, "up", 9, 11);
     this.createPlayerAnimation.call(this, "right", 6, 8);
     this.createPlayerAnimation.call(this, "down", 0, 2);
     this.createPlayerAnimation.call(this, "left", 3, 5);
+
+    // camera position
+    this.cameras.main.setBounds(
+      0,
+      0,
+      tutorialTilemap.widthInPixels * mapScale,
+      tutorialTilemap.heightInPixels * mapScale
+    );
+    this.cameras.main.startFollow(container, true, 1, 0);
+    this.cameras.main.setFollowOffset(
+      -playerSprite.width,
+      -playerSprite.height
+    );
 
     // npc agent setup
     const [agentSprite, agentContainer] = this.createSpriteWithContainer.call(
@@ -64,7 +65,6 @@ export default class TutorialScene extends Phaser.Scene {
       "agent"
     );
     agentSprite.setDepth(playerSprite.depth);
-    agentSprite.scale = 2.5;
     agentSprite.setFrame(this.getStopFrame("up"));
 
     // grid movement

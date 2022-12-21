@@ -1,5 +1,3 @@
-import Phaser = require("phaser");
-
 export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
   borderThickness: number;
   borderColor: any;
@@ -20,7 +18,6 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
 
   constructor(scene, pluginManager, pluginKey) {
     super(scene, pluginManager, pluginKey);
-    console.log("HIII!!!", this, "YOO!!", scene.add.graphics);
   }
 
   public init(opts?) {

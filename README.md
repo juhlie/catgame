@@ -20,15 +20,16 @@ tutorial level:
 
 loading screens & lore:
 
-TBD
+- TBD
 
 level 1:
 
-TBD
+- TBD
 
 extras/nits (stop wasting your time on these...):
 
-- [ ] set camera to only follow player's x axis (center canvas vertically)
+- [x] set camera to only follow player's x axis (center canvas vertically)
+  - omg i actually got it to work
 
 ## Usage
 
