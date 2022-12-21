@@ -18,19 +18,44 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
 
   constructor(scene, pluginManager, pluginKey) {
     super(scene, pluginManager, pluginKey);
+
+    /*    
+
+		TODO - block commented parts aren't working - look into prototypes & inheritance
+
+		// called when the plugin is loaded by the PluginManager
+    const eventEmitter = this.systems.events;
+    console.log("eventemitter?", eventEmitter);
+    eventEmitter.on("shutdown", this.shutdown, this);
+    eventEmitter.on("destroy", this.destroy, this); */
   }
+
+  /*   //  Called when a Scene shuts down, it may then come back again later
+  // (which will invoke the 'start' event) but should be considered dormant.
+  private shutdown() {
+    if (this.text) this.text.destroy();
+    console.log("SHUT DOWN!!!");
+  }
+
+  // called when a Scene is destroyed by the Scene Manager
+  private destroy() {
+    this.shutdown();
+    this.scene = undefined;
+    console.log("DESTROYED!!!");
+  } */
 
   public init(opts?) {
     if (!opts) opts = {};
     // set properties from opts object or use defaults
     this.borderThickness = opts.borderThickness || 3;
-    this.borderColor = opts.borderColor || 0x907748;
+    this.borderColor = opts.borderColor || 0xffffff;
     this.borderAlpha = opts.borderAlpha || 1;
     this.windowAlpha = opts.windowAlpha || 0.8;
     this.windowColor = opts.windowColor || 0x303030;
-    this.windowHeight = opts.windowHeight || 150;
-    this.padding = opts.padding || 32;
-    this.closeBtnColor = opts.closeBtnColor || "darkgoldenrod";
+    this.windowHeight =
+      opts.windowHeight || this.systems.game.canvas.height / 3;
+    this.padding = opts.padding || 64;
+    this.closeBtnColor = opts.closeBtnColor || this.borderColor;
     this.dialogSpeed = opts.dialogSpeed || 3;
     this.depth = opts.depth || 10;
 
@@ -50,13 +75,13 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   // Gets the width of the game (based on the scene)
-  private _getGameWidth() {
-    return this.scene.sys.game.config.width;
+  private _getGameWidth(): number {
+    return this.scene.sys.game.config.width as number;
   }
 
   // Gets the height of the game (based on the scene)
-  private _getGameHeight() {
-    return this.scene.sys.game.config.height;
+  private _getGameHeight(): number {
+    return this.scene.sys.game.config.height as number;
   }
 
   // Calculates where to place the dialog window based on the game size
@@ -77,7 +102,7 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
   private _createInnerWindow(x, y, rectWidth, rectHeight) {
     this.graphics.fillStyle(this.windowColor, this.windowAlpha);
     this.graphics
-      .fillRect(x + 1, y + 1, rectWidth - 1, rectHeight - 1)
+      .fillRoundedRect(x + 1, y + 1, rectWidth - 1, rectHeight - 1)
       .setDepth(this.depth);
   }
 
@@ -88,8 +113,76 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
       this.borderColor,
       this.borderAlpha
     );
-    this.graphics.strokeRect(x, y, rectWidth, rectHeight).setDepth(this.depth);
+    this.graphics
+      .strokeRoundedRect(x, y, rectWidth, rectHeight)
+      .setDepth(this.depth);
   }
+
+  // Hide/Show the dialog window
+  public toggleWindow() {
+    this.visible = !this.visible;
+    if (this.text) this.text.visible = this.visible;
+    if (this.graphics) this.graphics.visible = this.visible;
+    if (this.closeBtn) this.closeBtn.visible = this.visible;
+  }
+
+  // Sets the text for the dialog window
+  public setText(text) {
+    this._setText(text);
+  }
+
+  // Calcuate the position of the text in the dialog window
+  private _setText(text) {
+    console.log("THIS IS WHAT YOU SAID!!!\n", text);
+    // Reset the dialog
+    if (this.text) this.text.destroy();
+    var x = this.padding + 24;
+    var y = this._getGameHeight() - this.windowHeight - this.padding + 20;
+    this.text = this.scene.make.text({
+      x,
+      y,
+      text,
+      style: {
+        fontSize: "24px",
+        wordWrap: { width: this._getGameWidth() - this.padding * 2 - 25 },
+      },
+    });
+    this.text.setDepth(this.depth + 1);
+  }
+
+  // Creates the close dialog window button
+  private _createCloseModalButton() {
+    const self = this;
+    this.closeBtn = this.scene.make.text({
+      x: this._getGameWidth() - this.padding - 20,
+      y: this._getGameHeight() - this.windowHeight - this.padding + 10,
+      text: "X",
+      style: {
+        font: "bold 12px Arial",
+      },
+    });
+    this.closeBtn.setFill(this.closeBtnColor);
+    this.closeBtn.setDepth(this.depth + 1);
+    this.closeBtn.setInteractive();
+    this.closeBtn.on("pointerover", function () {
+      this.setTintFill(0xff0000);
+    });
+    this.closeBtn.on("pointerout", function () {
+      this.clearTint();
+    });
+    this.closeBtn.on("pointerdown", function () {
+      self.toggleWindow();
+      if (self.text) self.text.destroy();
+      console.log("destroyed?", self.text);
+    });
+  }
+
+  // // Creates the close dialog button border
+  // private _createCloseModalButtonBorder() {
+  //   var x = this._getGameWidth() - this.padding - 20;
+  //   var y = this._getGameHeight() - this.windowHeight - this.padding;
+  //   this.graphics.strokeRoundedRect(x, y, 20, 20);
+  // }
 
   // Creates the dialog window
   private _createWindow() {
@@ -109,5 +202,6 @@ export default class DialogPlugin extends Phaser.Plugins.ScenePlugin {
       dimensions.rectWidth,
       dimensions.rectHeight
     );
+    this._createCloseModalButton();
   }
 }

@@ -105,6 +105,9 @@ export default class TutorialScene extends Phaser.Scene {
 
     // testing dialog plugin
     this.dialogPlugin.init();
+    this.dialogPlugin.setText(
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    );
   }
 
   private createPlayerAnimation(
