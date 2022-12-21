@@ -1,7 +1,9 @@
 import { GridEngine } from "grid-engine";
+import DialogPlugin from "./DialogPlugin";
 
 export default class TutorialScene extends Phaser.Scene {
-  gridEngine: GridEngine; // does nothing, but gets rid of error message (?)
+  gridEngine: GridEngine;
+  dialogPlugin: DialogPlugin;
 
   public preload() {
     this.load.image("tiles", "assets/img/lofi_pastels.png");
@@ -21,8 +23,6 @@ export default class TutorialScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
-
-    this.load.plugin("DialogModalPlugin", "./DialogPlugin.ts");
   }
 
   public create() {
@@ -38,9 +38,6 @@ export default class TutorialScene extends Phaser.Scene {
       layer.setDepth(i);
       layer.scale = 3;
     }
-
-    // load dialog plugin - THIS IS WHERE IT BROKE.
-    // this.sys.install("DialogModalPlugin")
 
     // player setup
     const [playerSprite, container] = this.createSpriteWithContainer.call(
@@ -105,6 +102,9 @@ export default class TutorialScene extends Phaser.Scene {
     this.gridEngine.directionChanged().subscribe(({ direction }) => {
       playerSprite.setFrame(this.getStopFrame(direction));
     });
+
+    // testing dialog plugin
+    this.dialogPlugin.init();
   }
 
   private createPlayerAnimation(

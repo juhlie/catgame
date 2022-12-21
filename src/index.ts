@@ -1,5 +1,6 @@
 import "phaser";
 import { GridEngine } from "grid-engine";
+import DialogPlugin from "./DialogPlugin";
 import TutorialScene from "./TutorialScene";
 
 export enum Canvas {
@@ -23,6 +24,11 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
         key: "gridEngine",
         plugin: GridEngine,
         mapping: "gridEngine",
+      },
+      {
+        key: "dialogPlugin",
+        plugin: DialogPlugin,
+        mapping: "dialogPlugin",
       },
     ],
   },
